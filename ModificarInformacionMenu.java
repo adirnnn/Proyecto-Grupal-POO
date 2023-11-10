@@ -1,12 +1,16 @@
 import java.util.Scanner;
 
 public class ModificarInformacionMenu {
-    private Biblioteca biblioteca;
-
+    /**
+     * @param biblioteca
+     */
     public ModificarInformacionMenu(Biblioteca biblioteca) {
-        this.biblioteca = biblioteca;
     }
 
+    /**
+     * @param scanner
+     * @param usuario
+     */
     public void modificarInformacion(Scanner scanner, Usuario usuario) {
         System.out.println("Información Actual:");
         System.out.println(usuario.toString());
@@ -39,6 +43,10 @@ public class ModificarInformacionMenu {
         }
     }
 
+    /**
+     * @param scanner
+     * @param usuario
+     */
     private void modificarNombre(Scanner scanner, Usuario usuario) {
         System.out.print("Ingrese el nuevo nombre: ");
         String nuevoNombre = scanner.nextLine();
@@ -46,6 +54,10 @@ public class ModificarInformacionMenu {
         System.out.println("Nombre modificado exitosamente.");
     }
 
+    /**
+     * @param scanner
+     * @param usuario
+     */
     private void modificarCorreo(Scanner scanner, Usuario usuario) {
         System.out.print("Ingrese el nuevo correo electrónico: ");
         String nuevoCorreo = scanner.nextLine();
@@ -53,6 +65,10 @@ public class ModificarInformacionMenu {
         System.out.println("Correo electrónico modificado exitosamente.");
     }
 
+    /**
+     * @param scanner
+     * @param usuario
+     */
     private void modificarEstadoEstudiante(Scanner scanner, Usuario usuario) {
         System.out.print("¿Es estudiante? (true/false): ");
         boolean nuevoEstadoEstudiante = scanner.nextBoolean();

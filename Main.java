@@ -1,6 +1,9 @@
 import java.util.Scanner;
 
 public class Main {
+    /**
+     * @param args
+     */
     public static void main(String[] args) {
         Biblioteca biblioteca = new Biblioteca();
         Scanner scanner = new Scanner(System.in);
@@ -37,6 +40,11 @@ public class Main {
         }
     }
 
+    /**
+     * @param scanner
+     * @param biblioteca
+     * @return
+     */
     private static Usuario iniciarSesion(Scanner scanner, Biblioteca biblioteca) {
         System.out.println("Ingrese su correo electrónico:");
         String correo = scanner.nextLine();
@@ -54,6 +62,10 @@ public class Main {
         return usuario;
     }
 
+    /**
+     * @param scanner
+     * @param biblioteca
+     */
     private static void registrarUsuario(Scanner scanner, Biblioteca biblioteca) {
         System.out.println("Ingrese su nombre:");
         String nombre = scanner.nextLine();
@@ -71,6 +83,11 @@ public class Main {
         System.out.println("Registro exitoso. ¡Bienvenido, " + nuevoUsuario.getNombre() + "!");
     }
 
+    /**
+     * @param scanner
+     * @param biblioteca
+     * @param usuario
+     */
     private static void menuUsuario(Scanner scanner, Biblioteca biblioteca, Usuario usuario) {
         while (true) {
             System.out.println("Menu de Usuario:");

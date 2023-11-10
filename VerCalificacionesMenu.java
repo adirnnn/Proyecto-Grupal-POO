@@ -2,12 +2,22 @@ import java.util.List;
 import java.util.Scanner;
 
 public class VerCalificacionesMenu {
+    /**
+     *
+     */
     private Biblioteca biblioteca;
 
+    /**
+     * @param biblioteca
+     */
     public VerCalificacionesMenu(Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
     }
 
+    /**
+     * @param scanner
+     * @param usuario
+     */
     public void verCalificaciones(Scanner scanner, Usuario usuario) {
         List<Calificacion> calificacionesUsuario = biblioteca.obtenerCalificaciones(usuario);
 

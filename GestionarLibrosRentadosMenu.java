@@ -2,12 +2,22 @@ import java.util.List;
 import java.util.Scanner;
 
 public class GestionarLibrosRentadosMenu {
+    /**
+     *
+     */
     private Biblioteca biblioteca;
 
+    /**
+     * @param biblioteca
+     */
     public GestionarLibrosRentadosMenu(Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
     }
 
+    /**
+     * @param scanner
+     * @param usuario
+     */
     public void gestionarLibrosRentados(Scanner scanner, Usuario usuario) {
         List<Libro> librosRentados = biblioteca.obtenerLibrosRentados(usuario);
 

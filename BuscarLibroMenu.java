@@ -2,12 +2,21 @@ import java.util.List;
 import java.util.Scanner;
 
 public class BuscarLibroMenu {
+    /**
+     *
+     */
     private Biblioteca biblioteca;
 
+    /**
+     * @param biblioteca
+     */
     public BuscarLibroMenu(Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
     }
 
+    /**
+     * @param scanner
+     */
     public void buscarLibro(Scanner scanner) {
         System.out.println("Ingrese el título o parte del título del libro que desea buscar:");
         String tituloBusqueda = scanner.nextLine();
@@ -36,6 +45,9 @@ public class BuscarLibroMenu {
         }
     }
 
+    /**
+     * @param libro
+     */
     private void mostrarDetallesLibro(Libro libro) {
         System.out.println("Detalles del Libro:");
         System.out.println(libro.toString());

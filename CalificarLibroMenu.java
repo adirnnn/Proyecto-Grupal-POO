@@ -1,12 +1,22 @@
 import java.util.Scanner;
 
 public class CalificarLibroMenu {
+    /**
+     *
+     */
     private Biblioteca biblioteca;
 
+    /**
+     * @param biblioteca
+     */
     public CalificarLibroMenu(Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
     }
 
+    /**
+     * @param scanner
+     * @param usuario
+     */
     public void calificarLibro(Scanner scanner, Usuario usuario) {
         System.out.println("Ingrese el título del libro que desea calificar:");
         String tituloLibro = scanner.nextLine();
