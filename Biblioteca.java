@@ -1,137 +1,110 @@
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Biblioteca {
-    /**
-     *
-     */
     private List<Libro> libros;
-    /**
-     *
-     */
-    private List<Item> items;
-    /**
-     *
-     */
-    private List<Calificacion> calificaciones;
-    /**
-     *
-     */
-    private List<Usuario> usuarios;
+    private List<Estudiante> estudiantes;
 
-    /**
-     * 
-     */
     public Biblioteca() {
         this.libros = new ArrayList<>();
-        this.items = new ArrayList<>();
-        this.calificaciones = new ArrayList<>();
-        this.usuarios = new ArrayList<>();
+        this.estudiantes = new ArrayList<>();
     }
 
-    // Métodos para agregar libros, items y otras operaciones
-
-    /**
-     * @param libro
-     */
-    public void agregarLibro(Libro libro) {
-        libros.add(libro);
+    public void agregarLibros(List<Libro> libros) {
+        this.libros.addAll(libros);
     }
 
-    /**
-     * @param item
-     */
-    public void agregarItem(Item item) {
-        items.add(item);
+    public void agregarEstudiante(Estudiante estudiante) {
+        estudiantes.add(estudiante);
     }
 
-    /**
-     * @param calificacion
-     */
-    public void agregarCalificacion(Calificacion calificacion) {
-        calificaciones.add(calificacion);
+    public void mostrarListadoLibros() {
+        System.out.println("Listado de libros:");
+
+        for (Libro libro : libros) {
+            System.out.println("Título: " + libro.getTitulo());
+            System.out.println("Editorial: " + libro.getEditorial());
+
+            if (libro.esVirtual()) {
+                System.out.println("Link: " + libro.getLink());
+            }
+
+            System.out.println("----------------------");
+        }
     }
 
-    /**
-     * @param usuario
-     */
-    public void agregarUsuario(Usuario usuario) {
-        usuarios.add(usuario);
+    public void mostrarMenuEstudiante(Estudiante estudiante) {
+        System.out.println("¡Bienvenido, " + estudiante.getNombre() + "!");
+
+        int opcion;
+        do {
+            System.out.println("Menú:");
+            System.out.println("1. Ver listado de libros");
+            System.out.println("2. Salir");
+
+            opcion = obtenerEnteroInput("Ingrese su elección: ");
+
+            switch (opcion) {
+                case 1:
+                    mostrarListadoLibros();
+                    break;
+                case 2:
+                    System.out.println("Saliendo del programa. ¡Hasta luego!");
+                    break;
+                default:
+                    System.out.println("Opción no válida. Inténtelo de nuevo.");
+            }
+        } while (opcion != 2);
     }
 
-    /**
-     * @param usuario
-     * @return
-     */
-    public List<Libro> obtenerLibrosRentados(Usuario usuario) {
-        // Implementa la lógica para obtener la lista de libros rentados por el usuario
-        // Esto debería consultar la base de datos y devolver los resultados
-        List<Libro> librosRentados = new ArrayList<>();
-        // Lógica para obtener libros rentados por el usuario
-        return librosRentados;
+    public Estudiante crearNuevoEstudiante() {
+        System.out.println("Creación de Nuevo Estudiante:");
+
+        // Solicitar nombre y correo electrónico
+        String nombre = obtenerInput("Ingrese el nombre del estudiante: ");
+        String correoElectronico = obtenerInput("Ingrese el correo electrónico del estudiante: ");
+
+        // Crear y devolver el nuevo estudiante
+        Estudiante nuevoEstudiante = new Estudiante(nombre, correoElectronico);
+        estudiantes.add(nuevoEstudiante);
+        return nuevoEstudiante;
     }
 
-    /**
-     * @param usuario
-     * @param libro
-     */
-    public void devolverLibro(Usuario usuario, Libro libro) {
-        // Implementa la lógica para devolver un libro
-        // Esto debería actualizar la base de datos y manejar cualquier lógica adicional
-        // Lógica para devolver un libro
+    public int obtenerEnteroInput(String mensaje) {
+        int resultado = 0;
+        boolean entradaValida = false;
+        do {
+            try {
+                System.out.print(mensaje);
+                BufferedReader br = new BufferedReader(new java.io.InputStreamReader(System.in));
+                resultado = Integer.parseInt(br.readLine());
+                entradaValida = true;
+            } catch (NumberFormatException | IOException e) {
+                System.out.println("Por favor, ingrese un número entero válido.");
+            }
+        } while (!entradaValida);
+        return resultado;
     }
 
-    /**
-     * @return
-     */
-    public List<Item> obtenerItemsDisponibles() {
-        // Implementa la lógica para obtener la lista de ítems disponibles
-        // Esto debería consultar la base de datos y devolver los resultados
-        List<Item> itemsDisponibles = new ArrayList<>();
-        // Lógica para obtener ítems disponibles
-        return itemsDisponibles;
+    private String obtenerInput(String mensaje) {
+        String resultado = "";
+        boolean entradaValida = false;
+        do {
+            try {
+                System.out.print(mensaje);
+                BufferedReader br = new BufferedReader(new java.io.InputStreamReader(System.in));
+                resultado = br.readLine();
+                entradaValida = true;
+            } catch (IOException e) {
+                System.out.println("Error al obtener la entrada. Inténtelo de nuevo.");
+            }
+        } while (!entradaValida);
+        return resultado;
     }
 
-    /**
-     * @param usuario
-     * @return
-     */
-    public List<Calificacion> obtenerCalificaciones(Usuario usuario) {
-        // Implementa la lógica para obtener las calificaciones y reseñas dadas por el usuario
-        // Esto debería obtener la información de la base de datos
-        List<Calificacion> calificacionesUsuario = new ArrayList<>();
-        // Lógica para obtener calificaciones del usuario
-        return calificacionesUsuario;
-    }
-
-    /**
-     * @param tituloBusqueda
-     * @return
-     */
-    public List<Libro> buscarLibros(String tituloBusqueda) {
-        return null;
-    }
-
-    /**
-     * @param correo
-     * @param contrasena
-     * @return
-     */
-    public Usuario iniciarSesion(String correo, String contrasena) {
-        return null;
-    }
-
-    /**
-     * @param usuario
-     */
-    public void eliminarUsuario(Usuario usuario) {
-    }
-
-    /**
-     * @param tituloLibro
-     * @return
-     */
-    public Libro buscarLibroPorTitulo(String tituloLibro) {
-        return null;
+    public boolean hayEstudiantes() {
+        return !estudiantes.isEmpty();
     }
 }
