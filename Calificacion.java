@@ -2,13 +2,13 @@ public class Calificacion {
     private Usuario usuario;
     private Libro libro;
     private int calificacion;
-    private String resena;
+    private String comentario;
 
-    public Calificacion(Usuario usuario, Libro libro, int calificacion, String resena) {
+    public Calificacion(Usuario usuario, Libro libro, int calificacion, String comentario) {
         this.usuario = usuario;
         this.libro = libro;
         this.calificacion = calificacion;
-        this.resena = resena;
+        this.comentario = comentario;
     }
 
     public Usuario getUsuario() {
@@ -23,7 +23,17 @@ public class Calificacion {
         return calificacion;
     }
 
-    public String getResena() {
-        return resena;
+    public String getComentario() {
+        return comentario;
+    }
+
+    @Override
+    public String toString() {
+        return "Calificacion{" +
+                "usuario=" + usuario.getNombre() +
+                ", libro=" + libro.getTitulo() +
+                ", calificacion=" + calificacion +
+                ", comentario='" + comentario + '\'' +
+                '}';
     }
 }

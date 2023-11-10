@@ -1,146 +1,121 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
         Biblioteca biblioteca = new Biblioteca();
+        Scanner scanner = new Scanner(System.in);
 
-        // Crear algunos libros, items y usuarios para propósitos de demostración
-        Libro libro1 = new Libro("Libro 1", true);
-        Libro libro2 = new Libro("Libro 2", false);
-        Item item1 = new Item("Item 1");
-        Usuario usuario1 = new Usuario("Usuario 1", "usuario1@example.com", true);
+        // Código para cargar datos iniciales, si es necesario
 
-        biblioteca.agregarLibro(libro1);
-        biblioteca.agregarLibro(libro2);
-        biblioteca.agregarItem(item1);
-        biblioteca.agregarUsuario(usuario1);
+        Usuario usuarioActual = null;
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            while (true) {
-                System.out.println("Menú Principal:");
-                System.out.println("1. Gestionar");
-                System.out.println("2. Estudiante");
-                System.out.println("3. Salir");
+        while (true) {
+            System.out.println("Menu Principal:");
+            System.out.println("1. Iniciar Sesión");
+            System.out.println("2. Registrarse");
+            System.out.println("3. Salir");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea
 
-                int opcion = scanner.nextInt();
-                scanner.nextLine(); // Consume el salto de línea
-
-                switch (opcion) {
-                    case 1:
-                        gestionarMenu(scanner, biblioteca);
-                        break;
-                    case 2:
-                        estudianteMenu(scanner, biblioteca, usuario1);
-                        break;
-                    case 3:
-                        System.out.println("Saliendo del programa.");
-                        System.exit(0);
-                        break;
-                    default:
-                        System.out.println("Opción no válida.");
-                }
+            switch (opcion) {
+                case 1:
+                    usuarioActual = iniciarSesion(scanner, biblioteca);
+                    if (usuarioActual != null) {
+                        menuUsuario(scanner, biblioteca, usuarioActual);
+                    }
+                    break;
+                case 2:
+                    registrarUsuario(scanner, biblioteca);
+                    break;
+                case 3:
+                    System.out.println("Saliendo del programa. ¡Hasta luego!");
+                    System.exit(0);
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
             }
         }
     }
 
-    private static void gestionarMenu(Scanner scanner, Biblioteca biblioteca) {
-        System.out.println("Submenú Gestionar:");
-        System.out.println("1. Ver ítems disponibles");
-        System.out.println("2. Agregar libro");
-        System.out.println("3. Agregar ítem");
-        int gestionarOpcion = scanner.nextInt();
-        scanner.nextLine(); // Consume el salto de línea
+    private static Usuario iniciarSesion(Scanner scanner, Biblioteca biblioteca) {
+        System.out.println("Ingrese su correo electrónico:");
+        String correo = scanner.nextLine();
+        System.out.println("Ingrese su contraseña:");
+        String contrasena = scanner.nextLine();
 
-        switch (gestionarOpcion) {
-            case 1:
-                List<Item> itemsDisponibles = biblioteca.obtenerItemsDisponibles();
-                System.out.println("Ítems Disponibles:");
-                for (int i = 0; i < itemsDisponibles.size(); i++) {
-                    System.out.println((i + 1) + ". " + itemsDisponibles.get(i).getNombre());
-                }
-                break;
-            case 2:
-                System.out.print("Ingrese el título del nuevo libro: ");
-                String tituloLibro = scanner.nextLine();
-                System.out.print("¿Es libro virtual? (true/false): ");
-                boolean esVirtual = scanner.nextBoolean();
-                Libro nuevoLibro = new Libro(tituloLibro, esVirtual);
-                biblioteca.agregarLibro(nuevoLibro);
-                System.out.println("Libro agregado con éxito.");
-                break;
-            case 3:
-                System.out.print("Ingrese el nombre del nuevo ítem: ");
-                String nombreItem = scanner.nextLine();
-                Item nuevoItem = new Item(nombreItem);
-                biblioteca.agregarItem(nuevoItem);
-                System.out.println("Ítem agregado con éxito.");
-                break;
-            default:
-                System.out.println("Opción no válida.");
+        Usuario usuario = biblioteca.iniciarSesion(correo, contrasena);
+
+        if (usuario == null) {
+            System.out.println("Inicio de sesión fallido. Verifique sus credenciales.");
+        } else {
+            System.out.println("Inicio de sesión exitoso. ¡Bienvenido, " + usuario.getNombre() + "!");
         }
+
+        return usuario;
     }
 
-    private static void estudianteMenu(Scanner scanner, Biblioteca biblioteca, Usuario usuario) {
-        System.out.println("Submenú Estudiante:");
-        System.out.println("1. Ver libros rentados");
-        System.out.println("2. Devolver libro");
-        System.out.println("3. Buscar libro por título");
-        System.out.println("4. Calificar libro");
-        System.out.println("5. Ver calificaciones y reseñas dadas");
-        int estudianteOpcion = scanner.nextInt();
-        scanner.nextLine(); // Consume el salto de línea
+    private static void registrarUsuario(Scanner scanner, Biblioteca biblioteca) {
+        System.out.println("Ingrese su nombre:");
+        String nombre = scanner.nextLine();
+        System.out.println("Ingrese su correo electrónico:");
+        String correo = scanner.nextLine();
+        System.out.println("Ingrese su contraseña:");
+        String contrasena = scanner.nextLine();
+        System.out.println("¿Es estudiante? (true/false):");
+        boolean esEstudiante = scanner.nextBoolean();
+        scanner.nextLine(); // Consumir el salto de línea
 
-        switch (estudianteOpcion) {
-            case 1:
-                List<Libro> librosRentados = biblioteca.obtenerLibrosRentados(usuario);
-                System.out.println("Libros Rentados:");
-                for (int i = 0; i < librosRentados.size(); i++) {
-                    System.out.println((i + 1) + ". " + librosRentados.get(i).getTitulo());
-                }
-                break;
-            case 2:
-                List<Libro> librosRentadosEstudiante = biblioteca.obtenerLibrosRentados(usuario);
-                if (librosRentadosEstudiante.isEmpty()) {
-                    System.out.println("No tiene libros rentados en este momento.");
-                } else {
-                    System.out.println("Libros Rentados:");
-                    for (int i = 0; i < librosRentadosEstudiante.size(); i++) {
-                        System.out.println((i + 1) + ". " + librosRentadosEstudiante.get(i).getTitulo());
-                    }
+        Usuario nuevoUsuario = new Usuario(nombre, correo, contrasena, esEstudiante);
+        biblioteca.agregarUsuario(nuevoUsuario);
 
-                    System.out.print("\nSeleccione el número del libro que desea devolver (o 0 para salir): ");
-                    int seleccion = scanner.nextInt();
-                    scanner.nextLine(); // Consumir el salto de línea
+        System.out.println("Registro exitoso. ¡Bienvenido, " + nuevoUsuario.getNombre() + "!");
+    }
 
-                    if (seleccion >= 1 && seleccion <= librosRentadosEstudiante.size()) {
-                        Libro libroSeleccionado = librosRentadosEstudiante.get(seleccion - 1);
-                        biblioteca.devolverLibro(usuario, libroSeleccionado);
-                        System.out.println("Libro devuelto con éxito.");
-                    } else if (seleccion == 0) {
-                        System.out.println("Operación cancelada. Permanece con los libros rentados.");
-                    } else {
-                        System.out.println("Selección no válida.");
-                    }
-                }
-                break;
-            case 3:
-                // Lógica para buscar libro por título
-                biblioteca.buscarLibroPorTitulo(scanner);
-                break;
-            case 4:
-                // Lógica para calificar libro
-                CalificarLibroMenu calificarLibroMenu = new CalificarLibroMenu(biblioteca);
-                calificarLibroMenu.calificarLibro(scanner, usuario);
-                break;
-            case 5:
-                // Lógica para ver calificaciones y reseñas dadas
-                VerCalificacionesMenu verCalificacionesMenu = new VerCalificacionesMenu(biblioteca);
-                verCalificacionesMenu.verCalificaciones(usuario);
-                break;
-            default:
-                System.out.println("Opción no válida.");
+    private static void menuUsuario(Scanner scanner, Biblioteca biblioteca, Usuario usuario) {
+        while (true) {
+            System.out.println("Menu de Usuario:");
+            System.out.println("1. Buscar Libro");
+            System.out.println("2. Gestionar Libros Rentados");
+            System.out.println("3. Calificar Libro");
+            System.out.println("4. Ver Calificaciones");
+            System.out.println("5. Modificar Información Personal");
+            System.out.println("6. Eliminar Cuenta");
+            System.out.println("7. Cerrar Sesión");
+            int opcion = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea
+
+            switch (opcion) {
+                case 1:
+                    BuscarLibroMenu buscarLibroMenu = new BuscarLibroMenu(biblioteca);
+                    buscarLibroMenu.buscarLibro(scanner);
+                    break;
+                case 2:
+                    GestionarLibrosRentadosMenu gestionarLibrosRentadosMenu = new GestionarLibrosRentadosMenu(biblioteca);
+                    gestionarLibrosRentadosMenu.gestionarLibrosRentados(scanner, usuario);
+                    break;
+                case 3:
+                    CalificarLibroMenu calificarLibroMenu = new CalificarLibroMenu(biblioteca);
+                    calificarLibroMenu.calificarLibro(scanner, usuario);
+                    break;
+                case 4:
+                    VerCalificacionesMenu verCalificacionesMenu = new VerCalificacionesMenu(biblioteca);
+                    verCalificacionesMenu.verCalificaciones(scanner, usuario);
+                    break;
+                case 5:
+                    ModificarInformacionMenu modificarInformacionMenu = new ModificarInformacionMenu(biblioteca);
+                    modificarInformacionMenu.modificarInformacion(scanner, usuario);
+                    break;
+                case 6:
+                    EliminarCuentaMenu eliminarCuentaMenu = new EliminarCuentaMenu(biblioteca);
+                    eliminarCuentaMenu.eliminarCuenta(scanner, usuario);
+                    usuario = null; // Cerrar sesión después de eliminar la cuenta
+                    break;
+                case 7:
+                    System.out.println("Cerrando sesión. ¡Hasta luego, " + usuario.getNombre() + "!");
+                    return;
+                default:
+                    System.out.println("Opción no válida.");
+            }
         }
     }
 }

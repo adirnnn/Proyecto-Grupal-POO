@@ -8,18 +8,15 @@ public class VerCalificacionesMenu {
         this.biblioteca = biblioteca;
     }
 
-    public void verCalificaciones(Usuario usuario) {
-        List<Calificacion> calificaciones = biblioteca.obtenerCalificaciones(usuario);
+    public void verCalificaciones(Scanner scanner, Usuario usuario) {
+        List<Calificacion> calificacionesUsuario = biblioteca.obtenerCalificaciones(usuario);
 
-        if (calificaciones.isEmpty()) {
-            System.out.println("No has dado calificaciones aún.");
+        if (calificacionesUsuario.isEmpty()) {
+            System.out.println("No has realizado calificaciones aún.");
         } else {
             System.out.println("Tus Calificaciones:");
-            for (Calificacion calificacion : calificaciones) {
-                System.out.println("Libro: " + calificacion.getLibro().getTitulo());
-                System.out.println("Calificación: " + calificacion.getCalificacion());
-                System.out.println("Reseña: " + calificacion.getResena());
-                System.out.println("--------------------");
+            for (int i = 0; i < calificacionesUsuario.size(); i++) {
+                System.out.println((i + 1) + ". " + calificacionesUsuario.get(i).toString());
             }
         }
     }
