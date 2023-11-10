@@ -6,10 +6,18 @@ import java.util.List;
 public class Biblioteca {
     private List<Libro> libros;
     private List<Estudiante> estudiantes;
+    private List<Calificacion> calificaciones;
+    private List<Usuario> usuarios;
+    private List<Item> items;
+    private List<Libro> librosRentados;
 
     public Biblioteca() {
         this.libros = new ArrayList<>();
         this.estudiantes = new ArrayList<>();
+        this.calificaciones = new ArrayList<>();
+        this.usuarios = new ArrayList<>();
+        this.items = new ArrayList<>();
+        this.librosRentados = new ArrayList<>();
     }
 
     public void agregarLibros(List<Libro> libros) {
@@ -106,5 +114,60 @@ public class Biblioteca {
 
     public boolean hayEstudiantes() {
         return !estudiantes.isEmpty();
+    }
+
+    public List<Libro> buscarLibros(String titulo) {
+        List<Libro> librosEncontrados = new ArrayList<>();
+
+        for (Libro libro : libros) {
+            if (libro.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
+                librosEncontrados.add(libro);
+            }
+        }
+        return librosEncontrados;
+    }
+
+    public Libro buscarLibroPorTitulo(String titulo) {
+        for (Libro libro : libros) {
+            if (libro.getTitulo().equalsIgnoreCase(titulo)) {
+                return libro;
+            }
+        }
+        return null;
+    }
+
+    public List<Calificacion> obtenerCalificaciones(Usuario usuario) {
+        List<Calificacion> calificacionesUsuario = new ArrayList<>();
+        for (Calificacion calificacion : calificaciones) {
+            if (calificacion.getUsuario().equals(usuario)) {
+                calificacionesUsuario.add(calificacion);
+            }
+        }
+        return calificacionesUsuario;
+    }
+
+    public void agregarCalificacion(Calificacion calificacion) {
+        calificaciones.add(calificacion);
+    }
+
+    public void eliminarUsuario(Usuario usuario) {
+        usuarios.remove(usuario);
+    }
+
+    public List<Item> obtenerItemsDisponibles() {
+        return items;
+    }
+
+    public void agregarItem(Item item) {
+        items.add(item);
+    }
+        public List<Libro> obtenerLibrosRentados(Usuario usuario) {
+        List<Libro> librosUsuario = new ArrayList<>();
+        for (Libro libro : librosRentados) {
+            if (libro.estaRentadoPor(usuario)) {
+                librosUsuario.add(libro);
+            }
+        }
+        return librosUsuario;
     }
 }

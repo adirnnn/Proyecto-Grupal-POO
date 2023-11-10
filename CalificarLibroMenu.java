@@ -26,7 +26,7 @@ public class CalificarLibroMenu {
         if (libroACalificar != null) {
             System.out.println("Ingrese la calificación (1-5):");
             int calificacion = scanner.nextInt();
-            scanner.nextLine(); // Consumir el salto de línea
+            scanner.nextLine();
 
             if (calificacion >= 1 && calificacion <= 5) {
                 System.out.println("Ingrese una reseña (opcional):");
