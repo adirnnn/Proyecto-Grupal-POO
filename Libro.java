@@ -1,52 +1,29 @@
 public class Libro {
-    /**
-     *
-     */
     private String titulo;
-    /**
-     *
-     */
+    private String editorial;
     private boolean esVirtual;
+    private String link;
 
-    /**
-     * @param titulo
-     * @param esVirtual
-     */
-    public Libro(String titulo, boolean esVirtual) {
+    public Libro(String titulo, String editorial, boolean esVirtual, String link) {
         this.titulo = titulo;
+        this.editorial = editorial;
         this.esVirtual = esVirtual;
+        this.link = link;
     }
 
-    /**
-     * @return
-     */
     public String getTitulo() {
         return titulo;
     }
 
-    /**
-     * @param titulo
-     */
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public String getEditorial() {
+        return editorial;
     }
 
-    /**
-     * @return
-     */
     public boolean esVirtual() {
         return esVirtual;
     }
 
-    /**
-     * @param esVirtual
-     */
-    public void setEsVirtual(boolean esVirtual) {
-        this.esVirtual = esVirtual;
-    }
-
-    @Override
-    public String toString() {
-        return "Título: " + titulo + ", " + (esVirtual ? "Virtual" : "Físico");
+    public String getLink() {
+        return link;
     }
 }
