@@ -9,7 +9,8 @@ public class Usuario {
         this.esEstudiante = esEstudiante;
     }
 
-    // Getters y setters (métodos para acceder y modificar los atributos)
+
+
     public String getNombre() {
         return nombre;
     }
@@ -18,7 +19,21 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    // Otros getters y setters para los demás atributos
+    public String getCorreoElectronico() {
+        return correoElectronico;
+    }
+
+    public void setCorreoElectronico(String correoElectronico) {
+        this.correoElectronico = correoElectronico;
+    }
+
+    public boolean esEstudiante() {
+        return esEstudiante;
+    }
+
+    public void setEsEstudiante(boolean esEstudiante) {
+        this.esEstudiante = esEstudiante;
+    }
 
     @Override
     public String toString() {
