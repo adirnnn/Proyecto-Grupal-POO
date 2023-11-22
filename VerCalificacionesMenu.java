@@ -1,14 +1,21 @@
 import java.util.List;
-import java.util.Scanner;
 
 public class VerCalificacionesMenu {
     private Biblioteca biblioteca;
 
+    /**
+     * @param biblioteca
+     */
     public VerCalificacionesMenu(Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
     }
 
-    public void verCalificaciones(Scanner scanner, Usuario usuario) {
+    /**
+     * Obtiene la lista de calificaciones para un usuario dado y las imprime.
+    *
+    * @param  usuario El usuario para el cual obtener las calificaciones.
+     */
+    public void verCalificaciones(Usuario usuario) {
         List<Calificacion> calificacionesUsuario = biblioteca.obtenerCalificaciones(usuario);
 
         if (calificacionesUsuario.isEmpty()) {

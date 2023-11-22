@@ -1,223 +1,274 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Biblioteca {
-    private List<Libro> libros;
-    private List<Estudiante> estudiantes;
-    private List<Calificacion> calificaciones;
-    private List<Item> items;
-    private List<Libro> librosRentados;
+/**
+ * La clase Biblioteca representa una biblioteca virtual.
+ */
+public class Biblioteca<Registro> {
+    private static List<Libro> listaDeLibros = new ArrayList<>();
+    private List<Usuario> listaDeUsuarios = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
 
-    public Biblioteca() {
-        this.libros = new ArrayList<>();
-        this.estudiantes = new ArrayList<>();
-        this.calificaciones = new ArrayList<>();
-        this.items = new ArrayList<>();
-        this.librosRentados = new ArrayList<>();
+    /**
+     * El método main es el punto de entrada del programa.
+     * @param args Los argumentos de la línea de comandos.
+     */
+    public static void main(String[] args) {
+        Biblioteca biblioteca = new Biblioteca();
+        biblioteca.mostrarMenuInicioSesion();
     }
 
-    public void agregarLibros(List<Libro> libros) {
-        this.libros.addAll(libros);
+    /**
+     * El método crearNuevoUsuario permite al usuario crear un nuevo usuario.
+     * @return El nuevo Usuario creado.
+     */
+    public Usuario crearNuevoUsuario() {
+        System.out.println("Creación de Nuevo Usuario:");
+    
+        System.out.println("Ingrese el nombre del usuario:");
+        String nombre = scanner.nextLine();
+        System.out.println("Ingrese el correo electrónico del usuario:");
+        String correoElectronico = scanner.nextLine();
+        System.out.println("Ingrese la contraseña del usuario:");
+        String contrasena = scanner.nextLine();
+    
+        Usuario nuevoUsuario = new Usuario(nombre, correoElectronico, contrasena);
+        registrarUsuario(nuevoUsuario);
+        
+        System.out.println("¡Usuario registrado exitosamente!");
+    
+        // Regresar al menú de inicio de sesión
+        mostrarMenuInicioSesion();
+        
+        return nuevoUsuario;
     }
+    
+    /**
+     * El método iniciarSesion permite al usuario iniciar sesión en la biblioteca.
+     */
+    public void iniciarSesion() {
+        System.out.println("Ingrese su correo electrónico:");
+        String correo = scanner.nextLine();
+        System.out.println("Ingrese su contraseña:");
+        String contrasena = scanner.nextLine();
 
-    public void agregarEstudiante(Estudiante estudiante) {
-        estudiantes.add(estudiante);
-    }
+        Usuario usuario = buscarUsuario(correo, contrasena);
 
-    public void mostrarListadoLibros() {
-        System.out.println("Listado de libros:");
-
-        for (Libro libro : libros) {
-            System.out.println("Título: " + libro.getTitulo());
-            System.out.println("Editorial: " + libro.getEditorial());
-
-            if (libro.esVirtual()) {
-                System.out.println("Link: " + libro.getLink());
-            }
-
-            System.out.println("----------------------");
+        if (usuario != null) {
+            System.out.println("¡Bienvenido, " + usuario.getNombre() + "!");
+            mostrarMenuUsuario(usuario);
+        } else {
+            System.out.println("Correo electrónico o contraseña incorrectos.");
         }
     }
 
-    public void mostrarMenuEstudiante(Estudiante estudiante) {
-        System.out.println("¡Bienvenido, " + estudiante.getNombre() + "!");
-
-        int opcion;
-        do {
-            System.out.println("Menú:");
-            System.out.println("1. Ver listado de libros");
-            System.out.println("2. Salir");
-
-            opcion = obtenerEnteroInput("Ingrese su elección: ");
-
-            switch (opcion) {
-                case 1:
-                    mostrarListadoLibros();
-                    break;
-                case 2:
-                    System.out.println("Saliendo del programa. ¡Hasta luego!");
-                    break;
-                default:
-                    System.out.println("Opción no válida. Inténtelo de nuevo.");
-            }
-        } while (opcion != 2);
+    /**
+     * El método mostrarMenuUsuario muestra el menú de la biblioteca para un usuario específico.
+     * @param usuario El usuario actual.
+     */
+    public void mostrarMenuUsuario(Usuario usuario) {
+        if (usuario.esAdministrador()) {
+            mostrarMenuAdmin();
+        } else {
+            mostrarMenuUsuarioNormal(usuario);
+        }
     }
 
-    public Estudiante crearNuevoEstudiante() {
-        System.out.println("Creación de Nuevo Estudiante:");
+    /**
+     * El método mostrarMenuAdmin muestra el menú de administrador de la biblioteca.
+     */
+    private void mostrarMenuAdmin() {
+        System.out.println("Menú de Administrador:");
+        System.out.println("1. Agregar nuevo libro");
+        System.out.println("2. Administrar usuarios");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
 
-
-        String nombre = obtenerInput("Ingrese el nombre del estudiante: ");
-        String correoElectronico = obtenerInput("Ingrese el correo electrónico del estudiante: ");
-
-
-        Estudiante nuevoEstudiante = new Estudiante(nombre, correoElectronico);
-        estudiantes.add(nuevoEstudiante);
-        return nuevoEstudiante;
+        switch (opcion) {
+            case 1:
+                agregarNuevoLibro();
+                break;
+            case 2:
+                administrarUsuarios();
+                break;
+            default:
+                System.out.println("Opción no válida.");
+                break;
+        }
     }
 
-    int obtenerEnteroInput(String mensaje) {
-        int resultado = 0;
-        boolean entradaValida = false;
-        do {
-            try {
-                System.out.print(mensaje);
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                resultado = Integer.parseInt(br.readLine());
-                entradaValida = true;
-            } catch (NumberFormatException | IOException e) {
-                System.out.println("Por favor, ingrese un número entero válido.");
-            }
-        } while (!entradaValida);
-        return resultado;
+    /**
+     * El método mostrarMenuInicioSesion muestra el menú de inicio de sesión de la biblioteca.
+     */
+    public void mostrarMenuInicioSesion() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("1. Iniciar sesión");
+        System.out.println("2. Registrarse como nuevo usuario");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+    
+        switch (opcion) {
+            case 1:
+                iniciarSesion();
+                break;
+            case 2:
+                crearNuevoUsuario();
+                break;
+            default:
+                System.out.println("Opción no válida.");
+                break;
+        }
     }
-
-    private String obtenerInput(String mensaje) {
-        String resultado = "";
-        boolean entradaValida = false;
-        do {
-            try {
-                System.out.print(mensaje);
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                resultado = br.readLine();
-                entradaValida = true;
-            } catch (IOException e) {
-                System.out.println("Error al obtener la entrada. Inténtelo de nuevo.");
-            }
-        } while (!entradaValida);
-        return resultado;
+    
+    /**
+     * El método administrarUsuarios permite al administrador administrar los usuarios de la biblioteca.
+     */
+    private void administrarUsuarios() {
     }
 
 
-    public boolean hayEstudiantes() {
-        return !estudiantes.isEmpty();
+    private void mostrarMenuUsuarioNormal(Usuario usuario) {
+        System.out.println("Menú de Usuario:");
+        System.out.println("1. Buscar libros");
+        System.out.println("2. Ver historial");
+        int opcion = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (opcion) {
+            case 1:
+                buscarLibros();
+                break;
+            case 2:
+                verHistorial(usuario);
+                break;
+            default:
+                System.out.println("Opción no válida.");
+                break;
+        }
     }
 
-
-
-      public void agregarCalificacion(Calificacion calificacion) {
-        calificaciones.add(calificacion);
-    }
-
-
-    public List<Calificacion> obtenerCalificaciones(Usuario usuario) {
-        List<Calificacion> calificacionesUsuario = new ArrayList<>();
-        for (Calificacion calificacion : calificaciones) {
-            if (calificacion.getUsuario().equals(usuario)) {
-                calificacionesUsuario.add(calificacion);
+    /**
+     * El método buscarUsuario busca un usuario en la lista de usuarios.
+     * @param correo El correo electrónico del usuario.
+     * @param contrasena La contraseña del usuario.
+     * @return El Usuario encontrado o null si no se encontró.
+     */
+    public Usuario buscarUsuario(String correo, String contrasena) {
+        for (Usuario usuario : listaDeUsuarios) {
+            if (usuario.getCorreoElectronico().equals(correo) && usuario.getContrasena().equals(contrasena)) {
+                return usuario;
             }
         }
-        return calificacionesUsuario;
+        return null;
     }
 
-
-    public void eliminarEstudiante(Estudiante estudiante) {
-        estudiantes.remove(estudiante); 
+    /**
+     * El método registrarUsuario registra un nuevo usuario en la lista de usuarios.
+     * @param usuario El nuevo Usuario a registrar.
+     */
+    public void registrarUsuario(Usuario usuario) {
+        listaDeUsuarios.add(usuario);
     }
 
+    /**
+     * El método agregarNuevoLibro permite al administrador agregar un nuevo libro a la biblioteca.
+     */
+    public void agregarNuevoLibro() {
+        System.out.println("Ingrese el título del libro:");
+        String titulo = scanner.nextLine();
+        System.out.println("Ingrese el autor del libro:");
+        String autor = scanner.nextLine();
+        System.out.println("¿El libro es virtual? (Sí/No):");
+        boolean esVirtual = scanner.nextLine().equalsIgnoreCase("Sí");
 
-    public List<Libro> buscarLibros(String titulo) {
+        listaDeLibros.add(new Libro(titulo, autor, esVirtual, autor));
+        System.out.println("Libro agregado con éxito.");
+    }
+
+    /**
+     * El método buscarLibros busca libros en la biblioteca por título o autor.
+     * @return La lista de libros encontrados.
+     */
+    public static List<Libro> buscarLibros() {
+        System.out.println("Ingrese el título o autor a buscar:");
+        String busqueda = scanner.nextLine();
+        List<Libro> librosEncontrados = buscarLibrosPorTituloOAutor(busqueda);
+        // ... (mostrar los libros encontrados)
+        return librosEncontrados;
+    }
+
+    /**
+     * El método buscarLibrosPorTituloOAutor busca libros en la biblioteca por título o autor.
+     * @param busqueda La cadena de búsqueda.
+     * @return La lista de libros encontrados.
+     */
+    public static List<Libro> buscarLibrosPorTituloOAutor(String busqueda) {
         List<Libro> librosEncontrados = new ArrayList<>();
-        for (Libro libro : libros) {
-            if (libro.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
+        for (Libro libro : listaDeLibros) {
+            if (libro.getTitulo().toLowerCase().contains(busqueda.toLowerCase())
+                    || libro.getAutor().toLowerCase().contains(busqueda.toLowerCase())) {
                 librosEncontrados.add(libro);
             }
         }
         return librosEncontrados;
     }
 
+    /**
+     * El método verHistorial muestra el historial de un usuario.
+     * @param usuario El usuario actual.
+     */
+    public void verHistorial(Usuario usuario) {
+        List<Registro> historial = obtenerHistorial(usuario);
+        // ... (mostrar historial)
+    }
 
-    public Libro buscarLibroPorTitulo(String titulo) {
-        for (Libro libro : libros) {
-            if (libro.getTitulo().equalsIgnoreCase(titulo)) {
-                return libro;
-            }
-        }
+    /**
+     * El método obtenerHistorial obtiene el historial de un usuario.
+     * @param usuario El usuario actual.
+     * @return La lista de registros del historial.
+     */
+    public List<Registro> obtenerHistorial(Usuario usuario) {
+        // ... (lógica para obtener el historial del usuario)
+        return new ArrayList<>(); // Temporal, debe retornar el historial
+    }
+
+    public Libro buscarLibroPorTitulo(String tituloLibro) {
         return null;
     }
 
-
-    public List<Item> obtenerItemsDisponibles() {
-        return items;
-    }
-
-
-    public void agregarItem(Item item) {
-        items.add(item);
-    }
-
-
-    public List<Libro> obtenerLibrosRentados(Usuario usuario) {
-        List<Libro> librosUsuario = new ArrayList<>();
-        for (Libro libro : librosRentados) {
-            if (libro.estaRentadoPor(usuario)) {
-                librosUsuario.add(libro);
-            }
-        }
-        return librosUsuario;
+    public void agregarCalificacion(Calificacion nuevaCalificacion) {
     }
 
     public void eliminarUsuario(Usuario usuario) {
     }
 
-    public void registrarUsuario(Usuario nuevoUsuario) {
-    }
-
-    public <E> void registrarUsuario(E usuario, AbstractList<E> usuarios) {
-        usuarios.add(usuario);
-    }
-
-    public void iniciarSesion(Scanner scanner) {
-        System.out.println("Ingrese su correo electrónico:");
-        String correo = scanner.nextLine();
-        System.out.println("Ingrese su contraseña:");
-        String contrasena = scanner.nextLine();
-
-        Usuario usuario = buscarUsuario(correo, contrasena, null);
-
-        if (usuario != null) {
-            System.out.println("¡Bienvenido, " + usuario.getNombre() + "!"); 
-        } else {
-            System.out.println("Correo electrónico o contraseña incorrectos.");
-        }
-    }
-
-
-    private Usuario buscarUsuario(String correo, String contrasena, Usuario[] listaUsuarios) {
-        for (Usuario usuario : listaUsuarios) { 
-            if (usuario.getCorreoElectronico().equals(correo) && usuario.getContrasena().equals(contrasena)) {
-                return usuario;
-            }
-        }
-        return null; 
-    }
-
-    public Usuario iniciarSesion(String correo, String contrasena) {
+    public List<Calificacion> obtenerCalificaciones(Usuario usuario) {
         return null;
+    }
+
+    public void actualizarUsuario(Usuario usuario) {
+    }
+
+    public void devolverLibro(Usuario usuario, Libro libroDevuelto) {
+    }
+
+    public List<Libro> obtenerLibrosRentados(Usuario usuario) {
+        return null;
+    }
+
+    public boolean renovarPrestamo(Usuario usuario, Libro libroARenovar) {
+        return false;
+    }
+
+    public static List<Libro> buscarLibros(String tituloBusqueda) {
+        return null;
+    }
+
+    public List<Item> obtenerItemsDisponibles() {
+        return null;
+    }
+
+    public void agregarItem(Item nuevoItem) {
     }
 }
