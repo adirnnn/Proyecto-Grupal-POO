@@ -1,22 +1,12 @@
 import java.util.Scanner;
 
 public class CalificarLibroMenu {
-    /**
-     *
-     */
     private Biblioteca biblioteca;
 
-    /**
-     * @param biblioteca
-     */
     public CalificarLibroMenu(Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
     }
 
-    /**
-     * @param scanner
-     * @param usuario
-     */
     public void calificarLibro(Scanner scanner, Usuario usuario) {
         System.out.println("Ingrese el título del libro que desea calificar:");
         String tituloLibro = scanner.nextLine();
@@ -24,11 +14,9 @@ public class CalificarLibroMenu {
         Libro libroACalificar = biblioteca.buscarLibroPorTitulo(tituloLibro);
 
         if (libroACalificar != null) {
-            System.out.println("Ingrese la calificación (1-5):");
-            int calificacion = scanner.nextInt();
-            scanner.nextLine();
+            int calificacion = obtenerCalificacionValida(scanner);
 
-            if (calificacion >= 1 && calificacion <= 5) {
+            if (calificacion != -1) {
                 System.out.println("Ingrese una reseña (opcional):");
                 String resena = scanner.nextLine();
 
@@ -37,10 +25,32 @@ public class CalificarLibroMenu {
 
                 System.out.println("Calificación agregada exitosamente.");
             } else {
-                System.out.println("La calificación debe estar en el rango de 1 a 5.");
+                System.out.println("La calificación debe ser un número del 1 al 5.");
             }
         } else {
             System.out.println("No se encontró un libro con el título especificado.");
         }
+    }
+
+    private int obtenerCalificacionValida(Scanner scanner) {
+        int calificacion = -1;
+        boolean calificacionValida = false;
+
+        do {
+            System.out.println("Ingrese la calificación (1-5):");
+            try {
+                calificacion = Integer.parseInt(scanner.nextLine());
+
+                if (calificacion >= 1 && calificacion <= 5) {
+                    calificacionValida = true;
+                } else {
+                    System.out.println("La calificación debe estar en el rango de 1 a 5.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Ingrese un número válido.");
+            }
+        } while (!calificacionValida);
+
+        return calificacion;
     }
 }

@@ -1,16 +1,10 @@
 import java.util.Scanner;
 
 public class ModificarInformacionMenu {
-    /**
-     * @param biblioteca
-     */
+
     public ModificarInformacionMenu(Biblioteca biblioteca) {
     }
 
-    /**
-     * @param scanner
-     * @param usuario
-     */
     public void modificarInformacion(Scanner scanner, Usuario usuario) {
         System.out.println("Información Actual:");
         System.out.println(usuario.toString());
@@ -22,8 +16,7 @@ public class ModificarInformacionMenu {
         System.out.println("4. Volver al menú anterior");
 
         System.out.print("Ingrese el número de la opción: ");
-        int opcion = scanner.nextInt();
-        scanner.nextLine(); // Consumir el salto de línea
+        int opcion = obtenerEnteroInput(scanner);
 
         switch (opcion) {
             case 1:
@@ -37,42 +30,44 @@ public class ModificarInformacionMenu {
                 break;
             case 4:
                 System.out.println("Volviendo al menú anterior.");
-                return;
+                break;
             default:
                 System.out.println("Opción no válida.");
         }
     }
 
-    /**
-     * @param scanner
-     * @param usuario
-     */
     private void modificarNombre(Scanner scanner, Usuario usuario) {
         System.out.print("Ingrese el nuevo nombre: ");
         String nuevoNombre = scanner.nextLine();
         usuario.setNombre(nuevoNombre);
-        System.out.println("Nombre modificado exitosamente.");
+        System.out.println("Nombre modificado exitosamente a: " + usuario.getNombre());
     }
 
-    /**
-     * @param scanner
-     * @param usuario
-     */
     private void modificarCorreo(Scanner scanner, Usuario usuario) {
         System.out.print("Ingrese el nuevo correo electrónico: ");
         String nuevoCorreo = scanner.nextLine();
         usuario.setCorreoElectronico(nuevoCorreo);
-        System.out.println("Correo electrónico modificado exitosamente.");
+        System.out.println("Correo electrónico modificado exitosamente a: " + usuario.getCorreoElectronico());
     }
 
-    /**
-     * @param scanner
-     * @param usuario
-     */
     private void modificarEstadoEstudiante(Scanner scanner, Usuario usuario) {
         System.out.print("¿Es estudiante? (true/false): ");
         boolean nuevoEstadoEstudiante = scanner.nextBoolean();
         usuario.setEsEstudiante(nuevoEstadoEstudiante);
-        System.out.println("Estado de estudiante modificado exitosamente.");
+        System.out.println("Estado de estudiante modificado exitosamente a: " + usuario.esEstudiante());
+    }
+
+    private int obtenerEnteroInput(Scanner scanner) {
+        int resultado = 0;
+        boolean entradaValida = false;
+        do {
+            try {
+                resultado = Integer.parseInt(scanner.nextLine());
+                entradaValida = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Por favor, ingrese un número válido.");
+            }
+        } while (!entradaValida);
+        return resultado;
     }
 }

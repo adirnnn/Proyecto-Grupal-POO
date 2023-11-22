@@ -12,16 +12,21 @@ public class CSVReader {
             String linea;
             while ((linea = br.readLine()) != null) {
                 String[] datos = linea.split(",");
-                String titulo = datos[0];
-                String editorial = datos[1];
-                boolean esVirtual = Boolean.parseBoolean(datos[2]);
-                String link = esVirtual ? datos[3] : null;
 
-                Libro libro = new Libro(titulo, editorial, esVirtual, link);
-                libros.add(libro);
+                if (datos.length >= 3) {
+                    String titulo = datos[0];
+                    String editorial = datos[1];
+                    boolean esVirtual = Boolean.parseBoolean(datos[2]);
+                    String link = esVirtual && datos.length > 3 ? datos[3] : null;
+
+                    Libro libro = new Libro(titulo, editorial, esVirtual, link);
+                    libros.add(libro);
+                } else {
+                    System.out.println("Error: Datos incompletos en la línea: " + linea);
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Error al leer el archivo: " + e.getMessage());
         }
 
         return libros;

@@ -14,4 +14,12 @@ public class Estudiante {
     public String getCorreoElectronico() {
         return correoElectronico;
     }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setCorreoElectronico(String correoElectronico) {
+        this.correoElectronico = correoElectronico;
+    }
 }

@@ -30,15 +30,20 @@ public class GestionarItemsMenu {
         }
     }
 
+    
     /**
      * @param scanner
      */
     public void agregarNuevoItem(Scanner scanner) {
         System.out.print("Ingrese el nombre del nuevo ítem: ");
-        String nombreItem = scanner.nextLine();
-        Item nuevoItem = new Item(nombreItem);
-
-        biblioteca.agregarItem(nuevoItem);
-        System.out.println("Ítem agregado con éxito.");
+        String nombreItem = scanner.nextLine().trim(); 
+        
+        if (!nombreItem.isEmpty()) {
+            Item nuevoItem = new Item(nombreItem);
+            biblioteca.agregarItem(nuevoItem);
+            System.out.println("Ítem agregado con éxito.");
+        } else {
+            System.out.println("El nombre del ítem no puede estar vacío.");
+        }
     }
 }
