@@ -11,6 +11,33 @@ public class Main {
         biblioteca.mostrarMenu();
     }
 
+    static class CSVReader {
+
+        public static List<Libro> leerLibrosDesdeCSV(String rutaCSV) {
+            List<Libro> listaDeLibros = new ArrayList<>();
+
+            try (BufferedReader br = new BufferedReader(new FileReader(rutaCSV))) {
+                String linea;
+                while ((linea = br.readLine()) != null) {
+                    String[] partes = linea.split(",");
+                    if (partes.length == 5) {
+                        String titulo = partes[0].trim();
+                        String autor = partes[1].trim();
+                        String editorial = partes[2].trim();
+                        boolean esVirtual = Boolean.parseBoolean(partes[3].trim());
+                        String link = partes[4].trim();
+                        Libro libro = new Libro(titulo, autor, editorial, esVirtual, link);
+                        listaDeLibros.add(libro);
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error al cargar libros desde el archivo CSV.");
+            }
+
+            return listaDeLibros;
+        }
+    }
+
     static class Biblioteca {
         private Scanner scanner;
         private List<Usuario> listaDeUsuarios;
@@ -24,11 +51,11 @@ public class Main {
         public void mostrarMenu() {
             int opcion;
             do {
-                System.out.println("Bienvenido a la Biblioteca:");
-                System.out.println("1. Iniciar sesión");
-                System.out.println("2. Registrarse como nuevo usuario");
-                System.out.println("3. Salir");
-                System.out.print("Ingrese su elección: ");
+                System.out.println("\t\t\tBienvenido a la Biblioteca:");
+                System.out.println("\t\t1. Iniciar sesión");
+                System.out.println("\t\t2. Registrarse como nuevo usuario");
+                System.out.println("\t\t3. Salir");
+                System.out.print("\tIngrese su elección: ");
                 opcion = obtenerEnteroInput();
 
                 switch (opcion) {
@@ -40,7 +67,7 @@ public class Main {
                         break;
                     case 3:
                         guardarUsuarios();
-                        System.out.println("Gracias por visitar la Biblioteca. ¡Hasta luego!");
+                        System.out.println("\t\t\u001B[34mGracias por visitar la Biblioteca. ¡Hasta luego!\u001B[0m");
                         break;
                     default:
                         System.out.println("Opción no válida. Inténtelo de nuevo.");
@@ -65,15 +92,15 @@ public class Main {
         }
 
         private void iniciarSesion() {
-            System.out.println("Ingrese su correo electrónico:");
+            System.out.println("\t\tIngrese su correo electrónico:");
             String correo = scanner.nextLine();
-            System.out.println("Ingrese su contraseña:");
+            System.out.println("\t\tIngrese su contraseña:");
             String contrasena = scanner.nextLine();
 
             Usuario usuario = buscarUsuario(correo, contrasena);
 
             if (usuario != null) {
-                System.out.println("¡Bienvenido, " + usuario.getNombre() + "!");
+                System.out.println("\t\t¡Bienvenido, " + usuario.getNombre() + "!");
                 usuarioAutenticado = usuario;
                 mostrarMenuUsuario();
             } else {
@@ -84,7 +111,7 @@ public class Main {
         private void mostrarMenuUsuario() {
             int opcionUsuario;
             do {
-                System.out.println("Menú del Usuario:");
+                System.out.println("\tMenú del Usuario:");
                 System.out.println("1. Ver libros disponibles");
                 System.out.println("2. Calificar un libro");
                 System.out.println("3. Gestionar libros rentados");
@@ -96,7 +123,9 @@ public class Main {
 
                 switch (opcionUsuario) {
                     case 1:
-                        // Lógica para ver libros disponibles
+                
+                    LibrosCSVReader.leerYMostrarDatosLibros();
+                        System.out.println("Has seleccionado la opcion 1");
                         break;
                     case 2:
                         // Lógica para calificar un libro
@@ -119,6 +148,18 @@ public class Main {
             } while (opcionUsuario != 6);
 
             usuarioAutenticado = null;
+        }
+
+        private void verLibrosDisponibles() {
+            System.out.println("Libros Disponibles:");
+
+            // Utiliza CSVReader para leer los libros desde el archivo CSV
+            List<Libro> listaDeLibros = CSVReader.leerLibrosDesdeCSV("Libros.csv");
+
+            // Muestra los libros disponibles
+            for (Libro libro : listaDeLibros) {
+                System.out.println(libro.toString());
+            }
         }
 
         // Resto del código...
@@ -176,5 +217,25 @@ public class Main {
         }
     }
 
-    // Resto del código...
+    static class Libro {
+        private String titulo;
+        private String autor;
+        private String editorial;
+        private boolean esVirtual;
+        private String link;
+
+        public Libro(String titulo, String autor, String editorial, boolean esVirtual, String link) {
+            this.titulo = titulo;
+            this.autor = autor;
+            this.editorial = editorial;
+            this.esVirtual = esVirtual;
+            this.link = link;
+        }
+
+        @Override
+        public String toString() {
+            return "Título: " + titulo + ", Autor: " + autor + ", Editorial: " + editorial +
+                    ", Virtual: " + esVirtual + ", Link: " + link;
+        }
+    }
 }
