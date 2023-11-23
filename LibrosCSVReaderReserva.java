@@ -2,9 +2,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class LibrosCSVReader {
+public class LibrosCSVReaderReserva{
 
-    public static void leerYMostrarDatosLibros() {
+    public static void leerYMostrarDatosLibrosReserva() {
         String rutaArchivo = "Libros.csv";
 
         try {
@@ -50,6 +50,6 @@ public class LibrosCSVReader {
 
     public static void main(String[] args) {
         // Llamada a la función para leer y mostrar datos desde el archivo CSV
-        leerYMostrarDatosLibros();
+        leerYMostrarDatosLibrosReserva();
     }
 }

@@ -114,7 +114,7 @@ public class Main {
                 System.out.println("\tMenú del Usuario:");
                 System.out.println("1. Ver libros disponibles");
                 System.out.println("2. Calificar un libro");
-                System.out.println("3. Gestionar libros rentados");
+                System.out.println("3. libros reservar ");
                 System.out.println("4. Modificar información del usuario");
                 System.out.println("5. Ver calificaciones");
                 System.out.println("6. Cerrar sesión");
@@ -131,7 +131,7 @@ public class Main {
                         // Lógica para calificar un libro
                         break;
                     case 3:
-                        // Lógica para gestionar libros rentados
+                        reservarLibro();
                         break;
                     case 4:
                         // Lógica para modificar información del usuario
@@ -150,19 +150,30 @@ public class Main {
             usuarioAutenticado = null;
         }
 
-        private void verLibrosDisponibles() {
-            System.out.println("Libros Disponibles:");
+private void reservarLibro() {
+    // Lógica para reservar un libro por el usuario autenticado
+    System.out.println("Ingrese el nombre del libro a reservar:");
+    String nombreLibro = scanner.nextLine();
 
-            // Utiliza CSVReader para leer los libros desde el archivo CSV
-            List<Libro> listaDeLibros = CSVReader.leerLibrosDesdeCSV("Libros.csv");
+    // Buscar el libro por nombre en la lista de libros disponibles
+    List<Libro> listaDeLibros = CSVReader.leerLibrosDesdeCSV("Libros.csv");
+    boolean libroEncontrado = false;
 
-            // Muestra los libros disponibles
-            for (Libro libro : listaDeLibros) {
-                System.out.println(libro.toString());
-            }
+    for (Libro libro : listaDeLibros) {
+        if (libro.getTitulo().length > 0 && !libro.estaReservado()) {
+            libro.reservar(usuarioAutenticado.getNombre());
+            libroEncontrado = true;
+            System.out.println("Libro reservado exitosamente por " + usuarioAutenticado.getNombre());
+            break;
         }
+    }
 
-        // Resto del código...
+    if (!libroEncontrado) {
+        System.out.println("El libro no está disponible o ya está reservado.");
+    }
+}
+        
+        
 
         private int obtenerEnteroInput() {
             int resultado = 0;
@@ -219,23 +230,33 @@ public class Main {
 
     static class Libro {
         private String titulo;
-        private String autor;
-        private String editorial;
-        private boolean esVirtual;
-        private String link;
+        private boolean reservado;
 
         public Libro(String titulo, String autor, String editorial, boolean esVirtual, String link) {
             this.titulo = titulo;
-            this.autor = autor;
-            this.editorial = editorial;
-            this.esVirtual = esVirtual;
-            this.link = link;
+            
+        }
+
+
+        public boolean estaReservado() {
+            return reservado;
+        }
+
+        public char[] getTitulo() {
+            return null;
+        }
+
+        public void reservar(String usuario) {
+            reservado = true;
+        }
+
+        public boolean estaReservado(Class<Boolean> class1) {
+            return false;
         }
 
         @Override
         public String toString() {
-            return "Título: " + titulo + ", Autor: " + autor + ", Editorial: " + editorial +
-                    ", Virtual: " + esVirtual + ", Link: " + link;
+            return "Título: " + titulo + ", Reservado: " + (reservado ? "Sí" : "No");
         }
     }
 }

@@ -1,8 +1,9 @@
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Biblioteca<Registro> {
+public class Biblioteca {
     private static List<Libro> listaDeLibros = new ArrayList<>();
     private List<Usuario> listaDeUsuarios = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
@@ -78,22 +79,23 @@ public class Biblioteca<Registro> {
         }
     }
     public void mostrarMenuInicioSesion() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("1. Iniciar sesión");
-        System.out.println("2. Registrarse como nuevo usuario");
-        int opcion = scanner.nextInt();
-        scanner.nextLine();
-    
-        switch (opcion) {
-            case 1:
-                iniciarSesion();
-                break;
-            case 2:
-                crearNuevoUsuario();
-                break;
-            default:
-                System.out.println("Opción no válida.");
-                break;
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.println("1. Iniciar sesión");
+            System.out.println("2. Registrarse como nuevo usuario");
+            int opcion = scanner.nextInt();
+            scanner.nextLine();
+   
+            switch (opcion) {
+                case 1:
+                    iniciarSesion();
+                    break;
+                case 2:
+                    crearNuevoUsuario();
+                    break;
+                default:
+                    System.out.println("Opción no válida.");
+                    break;
+            }
         }
     }
     
@@ -166,11 +168,9 @@ public class Biblioteca<Registro> {
     }
 
     public void verHistorial(Usuario usuario) {
-        List<Registro> historial = obtenerHistorial(usuario);
-        // ... (mostrar historial)
     }
 
-    public List<Registro> obtenerHistorial(Usuario usuario) {
+    public List<Registry> obtenerHistorial(Usuario usuario) {
         // ... (lógica para obtener el historial del usuario)
         return new ArrayList<>(); // Temporal, debe retornar el historial
     }

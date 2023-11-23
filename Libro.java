@@ -6,15 +6,17 @@ public class Libro {
     private Usuario usuarioRentado;
     private String titulo;
     private String autor;
+    private boolean reservado;
 
-    public Libro(String titulo, String editorial, boolean esVirtual, String link2) {
+    public Libro(String titulo, String autor, String editorial, boolean esVirtual, String link) {
         this.titulo = titulo;
         this.editorial = editorial;
         this.esVirtual = esVirtual;
         this.link = null; // Opcional: Asignar un valor por defecto para 'link'
         this.rentado = false;
         this.usuarioRentado = null;
-        this.autor = null; // Si es necesario inicializar el autor
+        this.autor = null;
+        this.reservado = false;
     }
 
     // Getters para los atributos
@@ -50,7 +52,7 @@ public class Libro {
         return autor;
     }
 
-    // Métodos para rentar, devolver y verificar si está rentado por un usuario específico
+
 
     public void rentar(Usuario usuario) {
         if (!rentado) {
@@ -66,5 +68,17 @@ public class Libro {
 
     public boolean estaRentadoPor(Usuario usuario) {
         return rentado && usuarioRentado.equals(usuario);
+    }
+
+    public boolean estaReservado() {
+        return reservado;
+    }
+
+    public void reservar() {
+        reservado = true;
+    }
+
+    public void liberar() {
+        reservado = false;
     }
 }

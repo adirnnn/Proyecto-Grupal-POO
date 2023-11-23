@@ -96,4 +96,5 @@ private void renovarPrestamo(Usuario usuario, List<Libro> librosRentados) {
         } while (!entradaValida);
         return resultado;
     }
+
 }
