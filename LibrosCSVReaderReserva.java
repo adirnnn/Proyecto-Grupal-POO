@@ -1,8 +1,50 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
-public class LibrosCSVReaderReserva{
+public class LibrosCSVReaderReserva {
+
+    public static void reservarLibro(String nombreLibro, String nombreUsuario) {
+        String rutaArchivo = "Libros.csv";
+        File archivo = new File(rutaArchivo);
+        File archivoTemporal = new File("Temp.csv");
+
+        try (Scanner scanner = new Scanner(archivo);
+             FileWriter writer = new FileWriter(archivoTemporal)) {
+
+            while (scanner.hasNextLine()) {
+                String linea = scanner.nextLine();
+                String[] campos = linea.split(",");
+
+                if (campos.length >= 5 && campos[0] != null && campos[0].equalsIgnoreCase(nombreLibro)) {
+                    if (campos[4] != null && campos[4].equalsIgnoreCase("disponible")) {
+                        campos[4] = "reservado por " + nombreUsuario;
+                        System.out.println("Libro reservado exitosamente por " + nombreUsuario);
+                    } else {
+                        System.out.println("El libro no está disponible o ya está reservado.");
+                    }
+                }
+
+                writer.append(String.join(",", campos)).append("\n");
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error al reservar el libro: " + e.getMessage());
+        }
+
+        archivo.delete();
+        archivoTemporal.renameTo(archivo);
+    }
+
+    public static void main(String[] args) {
+        String nombreLibroAReservar = "Don Quijote de la Mancha"; // Nombre del libro a reservar
+        String nombreUsuario = "Jorge"; // Nombre del usuario
+
+        reservarLibro(nombreLibroAReservar, nombreUsuario);
+        leerYMostrarDatosLibrosReserva();
+    }
 
     public static void leerYMostrarDatosLibrosReserva() {
         String rutaArchivo = "Libros.csv";
@@ -48,8 +90,4 @@ public class LibrosCSVReaderReserva{
         System.out.println(); // Agregar una línea en blanco entre las filas de datos
     }
 
-    public static void main(String[] args) {
-        // Llamada a la función para leer y mostrar datos desde el archivo CSV
-        leerYMostrarDatosLibrosReserva();
-    }
 }

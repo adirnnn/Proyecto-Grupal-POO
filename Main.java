@@ -153,8 +153,6 @@ public class Main {
 private void reservarLibro() {
     // Lógica para reservar un libro por el usuario autenticado
     System.out.println("Ingrese el nombre del libro a reservar:");
-    String nombreLibro = scanner.nextLine();
-
     // Buscar el libro por nombre en la lista de libros disponibles
     List<Libro> listaDeLibros = CSVReader.leerLibrosDesdeCSV("Libros.csv");
     boolean libroEncontrado = false;

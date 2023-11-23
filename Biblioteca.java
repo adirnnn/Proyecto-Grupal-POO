@@ -213,4 +213,29 @@ public class Biblioteca {
 
     public void agregarItem(Item nuevoItem) {
     }
+
+public static List<Libro> leerLibrosDesdeCSV(String rutaCSV) {
+    List<Libro> listaDeLibros = new ArrayList<>();
+
+    try (BufferedReader br = new BufferedReader(new FileReader(rutaCSV))) {
+        String linea;
+        while ((linea = br.readLine()) != null) {
+            String[] partes = linea.split(",");
+            if (partes.length == 5) {
+                String titulo = partes[0].trim();
+                String autor = partes[1].trim();
+                String editorial = partes[2].trim();
+                boolean esVirtual = Boolean.parseBoolean(partes[3].trim());
+                String link = partes[4].trim();
+                Libro libro = new Libro(titulo, autor, editorial, esVirtual, link);
+                listaDeLibros.add(libro);
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Error al cargar libros desde el archivo CSV.");
+        e.printStackTrace();
+    }
+
+    return listaDeLibros;
+}
 }
