@@ -25,11 +25,6 @@ public class Item {
         this.nombre = nombre;
     }
 
-    /**
-     * Devuelve una representación en cadena del objeto Item.
-     *
-     * @return          una representación en cadena del objeto Item
-     */
     @Override
     public String toString() {
         return "Item{" +

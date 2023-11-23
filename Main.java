@@ -1,41 +1,26 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Clase principal que contiene el programa de la biblioteca.
- */
 public class Main {
-    public static List<Usuario> listaDeUsuarios = new ArrayList<>();
 
-    /**
-     * Método principal que inicia el programa de la biblioteca.
-     * @param args los argumentos de la línea de comandos
-     */
     public static void main(String[] args) {
         Biblioteca biblioteca = new Biblioteca(new Scanner(System.in));
+        biblioteca.cargarUsuarios();
         biblioteca.mostrarMenu();
     }
 
-    /**
-     * Clase interna que representa la biblioteca.
-     */
     static class Biblioteca {
         private Scanner scanner;
+        private List<Usuario> listaDeUsuarios;
+        private Usuario usuarioAutenticado;
 
-        /**
-         * Constructor de la clase Biblioteca.
-         * @param scanner el scanner utilizado para leer la entrada del usuario
-         */
         public Biblioteca(Scanner scanner) {
             this.scanner = scanner;
+            this.listaDeUsuarios = new ArrayList<>();
         }
 
-        /**
-         * Muestra el menú del sistema de la biblioteca.
-         *
-         * @return No tiene valor de retorno
-         */
         public void mostrarMenu() {
             int opcion;
             do {
@@ -47,18 +32,38 @@ public class Main {
                 opcion = obtenerEnteroInput();
 
                 switch (opcion) {
-                    case 1 -> iniciarSesion();
-                    case 2 -> crearNuevoUsuario();
-                    case 3 -> System.out.println("Gracias por visitar la Biblioteca. ¡Hasta luego!");
-                    default -> System.out.println("Opción no válida. Inténtelo de nuevo.");
+                    case 1:
+                        iniciarSesion();
+                        break;
+                    case 2:
+                        crearNuevoUsuario();
+                        break;
+                    case 3:
+                        guardarUsuarios();
+                        System.out.println("Gracias por visitar la Biblioteca. ¡Hasta luego!");
+                        break;
+                    default:
+                        System.out.println("Opción no válida. Inténtelo de nuevo.");
                 }
             } while (opcion != 3);
         }
 
+        private void cargarUsuarios() {
+            try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("usuarios.dat"))) {
+                listaDeUsuarios = (List<Usuario>) ois.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println("No se pudo cargar la lista de usuarios.");
+            }
+        }
 
-        /**
-         * Método privado que maneja el inicio de sesión del usuario.
-         */
+        private void guardarUsuarios() {
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("usuarios.dat"))) {
+                oos.writeObject(listaDeUsuarios);
+            } catch (IOException e) {
+                System.out.println("No se pudo guardar la lista de usuarios.");
+            }
+        }
+
         private void iniciarSesion() {
             System.out.println("Ingrese su correo electrónico:");
             String correo = scanner.nextLine();
@@ -69,69 +74,55 @@ public class Main {
 
             if (usuario != null) {
                 System.out.println("¡Bienvenido, " + usuario.getNombre() + "!");
+                usuarioAutenticado = usuario;
+                mostrarMenuUsuario();
             } else {
                 System.out.println("Correo electrónico o contraseña incorrectos.");
             }
         }
 
-        /**
-         * Método privado que crea un nuevo usuario.
-         */
-        private void crearNuevoUsuario() {
-            System.out.println("Ingrese su nombre:");
-            String nombre = scanner.nextLine();
-            System.out.println("Ingrese su correo electrónico:");
-            String correo = scanner.nextLine();
+        private void mostrarMenuUsuario() {
+            int opcionUsuario;
+            do {
+                System.out.println("Menú del Usuario:");
+                System.out.println("1. Ver libros disponibles");
+                System.out.println("2. Calificar un libro");
+                System.out.println("3. Gestionar libros rentados");
+                System.out.println("4. Modificar información del usuario");
+                System.out.println("5. Ver calificaciones");
+                System.out.println("6. Cerrar sesión");
+                System.out.print("Ingrese su elección: ");
+                opcionUsuario = obtenerEnteroInput();
 
-            // Validación para verificar si el correo ya está registrado
-            if (usuarioExistente(correo)) {
-                System.out.println("Este correo ya está registrado. Inicie sesión o utilice otro correo.");
-                return;
-            }
-
-            System.out.println("Ingrese su contraseña:");
-            String contrasena = scanner.nextLine();
-
-            Usuario nuevoUsuario = new Usuario(nombre, correo, contrasena);
-            listaDeUsuarios.add(nuevoUsuario);
-            System.out.println("¡Usuario creado con éxito!");
-        }
-
-        /**
-         * Método privado que verifica si un usuario ya existe en la lista de usuarios.
-         * @param correo el correo del usuario a verificar
-         * @return true si el usuario ya existe, false de lo contrario
-         */
-        private boolean usuarioExistente(String correo) {
-            for (Usuario usuario : listaDeUsuarios) {
-                if (usuario.getCorreo().equals(correo)) {
-                    return true; // El usuario ya está registrado
+                switch (opcionUsuario) {
+                    case 1:
+                        // Lógica para ver libros disponibles
+                        break;
+                    case 2:
+                        // Lógica para calificar un libro
+                        break;
+                    case 3:
+                        // Lógica para gestionar libros rentados
+                        break;
+                    case 4:
+                        // Lógica para modificar información del usuario
+                        break;
+                    case 5:
+                        // Lógica para ver calificaciones
+                        break;
+                    case 6:
+                        System.out.println("Cerrando sesión. ¡Hasta luego, " + usuarioAutenticado.getNombre() + "!");
+                        break;
+                    default:
+                        System.out.println("Opción no válida. Inténtelo de nuevo.");
                 }
-            }
-            return false; // El usuario no está registrado
+            } while (opcionUsuario != 6);
+
+            usuarioAutenticado = null;
         }
 
-        /**
-         * Busca un usuario en la lista de usuarios de la biblioteca utilizando el correo y la contraseña proporcionados.
-         * 
-         * @param correo el correo del usuario a buscar
-         * @param contrasena la contraseña del usuario a buscar
-         * @return el usuario encontrado, o null si no se encontró ningún usuario con el correo y contraseña proporcionados
-         */
-        private Usuario buscarUsuario(String correo, String contrasena) {
-            for (Usuario usuario : listaDeUsuarios) {
-                if (usuario.getCorreo().equals(correo) && usuario.getContrasena().equals(contrasena)) {
-                    return usuario; // Usuario encontrado
-                }
-            }
-            return null; // Usuario no encontrado
-        }
+        // Resto del código...
 
-        /**
-         * Obtiene un entero del usuario como entrada.
-         * 
-         * @return el entero ingresado por el usuario
-         */
         private int obtenerEnteroInput() {
             int resultado = 0;
             boolean entradaValida = false;
@@ -146,50 +137,44 @@ public class Main {
             return resultado;
         }
 
-    static class Usuario {
+        private Usuario buscarUsuario(String correo, String contrasena) {
+            for (Usuario usuario : listaDeUsuarios) {
+                if (usuario.getCorreo().equals(correo) && usuario.getContrasena().equals(contrasena)) {
+                    return usuario;
+                }
+            }
+            return null;
+        }
+
+        private void crearNuevoUsuario() {
+            // Implementa la lógica para crear un nuevo usuario aquí
+            // Puedes usar scanner para obtener datos del usuario
+        }
+    }
+
+    static class Usuario implements Serializable {
         private String nombre;
         private String correo;
         private String contrasena;
 
-        /**
-         * Crea un nuevo objeto de tipo Usuario con los valores proporcionados.
-         *
-         * @param nombre      el nombre del usuario
-         * @param correo      el correo electrónico del usuario
-         * @param contrasena  la contraseña del usuario
-         */
         public Usuario(String nombre, String correo, String contrasena) {
             this.nombre = nombre;
             this.correo = correo;
             this.contrasena = contrasena;
         }
 
-        /**
-         * Obtiene el valor de la propiedad correo.
-         *
-         * @return  el valor de la propiedad correo
-         */
+        public String getNombre() {
+            return nombre;
+        }
+
         public String getCorreo() {
             return correo;
         }
 
-        /**
-         * Obtiene el valor de la propiedad contrasena.
-         *
-         * @return el valor de la propiedad contrasena
-         */
         public String getContrasena() {
             return contrasena;
         }
+    }
 
-        /**
-         * Obtiene el nombre.
-         *
-         * @return el nombre
-         */
-        public String getNombre() {
-            return nombre;
-        }
-    }
-    }
+    // Resto del código...
 }

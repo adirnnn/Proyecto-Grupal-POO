@@ -1,28 +1,12 @@
 import java.util.Scanner;
 
-/**
- * Clase CalificarLibroMenu.
- * 
- * Esta clase representa el menú de calificación de libros.
- */
 public class CalificarLibroMenu {
     private Biblioteca biblioteca;
 
-    /**
-     * Constructor de la clase CalificarLibroMenu.
-     * 
-     * @param biblioteca La biblioteca a la que pertenece el menú.
-     */
     public CalificarLibroMenu(Biblioteca biblioteca) {
         this.biblioteca = biblioteca;
     }
 
-    /**
-     * Método para calificar un libro.
-     * 
-     * @param scanner El objeto Scanner para leer la entrada del usuario.
-     * @param usuario El usuario que realiza la calificación.
-     */
     public void calificarLibro(Scanner scanner, Usuario usuario) {
         System.out.println("Ingrese el título del libro que desea calificar:");
         String tituloLibro = scanner.nextLine();
@@ -48,12 +32,6 @@ public class CalificarLibroMenu {
         }
     }
 
-    /**
-     * Método privado para obtener una calificación válida.
-     * 
-     * @param scanner El objeto Scanner para leer la entrada del usuario.
-     * @return La calificación válida ingresada por el usuario.
-     */
     private int obtenerCalificacionValida(Scanner scanner) {
         int calificacion = -1;
         boolean calificacionValida = false;
