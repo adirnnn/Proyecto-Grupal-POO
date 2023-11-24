@@ -25,6 +25,7 @@ public class LibrosCSVReader {
                 String linea = scanner.nextLine();
                 String[] campos = linea.split(",");
                 imprimirDatos(campos);
+                System.out.println(); // Agregar una línea en blanco después de cada conjunto de datos
             }
 
             // Cerrar el scanner
@@ -36,16 +37,11 @@ public class LibrosCSVReader {
     }
 
     private static void imprimirEncabezados(String[] encabezados) {
-        for (String encabezado : encabezados) {
-            System.out.printf("%-25s", encabezado); // Alineación a la izquierda con un ancho máximo de 25 caracteres
-        }
+        System.out.printf("%-25s%-25s%-25s%n", encabezados[0], encabezados[1], encabezados[2]);
     }
 
     private static void imprimirDatos(String[] datos) {
-        for (String dato : datos) {
-            System.out.printf("%-25s", dato); // Alineación a la izquierda con un ancho máximo de 25 caracteres
-        }
-        System.out.println(); // Agregar una línea en blanco entre las filas de datos
+        System.out.printf("%-25s%-25s%-25s%n", datos[0], datos[1], datos[2]);
     }
 
     public static void main(String[] args) {

@@ -1,73 +1,56 @@
-public class Libro {
-    private String editorial;
-    private boolean esVirtual;
-    private String link;
-    private boolean rentado;
-    private Usuario usuarioRentado;
-    private String titulo;
-    private String autor;
-    private boolean reservado;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Libro(String titulo, String autor, String editorial, boolean esVirtual, String link) {
+public class Libro {
+    private String titulo;
+    private String editorial;
+    private String formato;
+    private String estado;
+    private boolean reservado;
+    private List<String> reseñas;
+    private String link;
+
+    public Libro(String titulo, String editorial, String formato, String estado) {
         this.titulo = titulo;
         this.editorial = editorial;
-        this.esVirtual = esVirtual;
-        this.link = null; // Opcional: Asignar un valor por defecto para 'link'
-        this.rentado = false;
-        this.usuarioRentado = null;
-        this.autor = null;
+        this.formato = formato;
+        this.estado = estado;
         this.reservado = false;
+        this.reseñas = new ArrayList<>();
+        this.link = ""; // Establecer un enlace vacío por defecto
     }
 
-    // Getters para los atributos
-
-    public Libro(String titulo2, String autor2, boolean esVirtual2) {
-    }
-
+    // Getters y setters para los atributos
     public String getTitulo() {
         return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
     public String getEditorial() {
         return editorial;
     }
 
-    public boolean esVirtual() {
-        return esVirtual;
+    public void setEditorial(String editorial) {
+        this.editorial = editorial;
     }
 
-    public String getLink() {
-        return link;
+    public String getFormato() {
+        return formato;
     }
 
-    public boolean estaRentado() {
-        return rentado;
+    public void setFormato(String formato) {
+        this.formato = formato;
     }
 
-    public Usuario getUsuarioRentado() {
-        return usuarioRentado;
+    public String getEstado() {
+        return estado;
     }
 
-    public String getAutor() {
-        return autor;
-    }
-
-
-
-    public void rentar(Usuario usuario) {
-        if (!rentado) {
-            rentado = true;
-            usuarioRentado = usuario;
-        }
-    }
-
-    public void devolver() {
-        rentado = false;
-        usuarioRentado = null;
-    }
-
-    public boolean estaRentadoPor(Usuario usuario) {
-        return rentado && usuarioRentado.equals(usuario);
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public boolean estaReservado() {
@@ -80,5 +63,30 @@ public class Libro {
 
     public void liberar() {
         reservado = false;
+    }
+
+    // Métodos para reseñas
+    public void agregarReseña(String resena) {
+        reseñas.add(resena);
+    }
+
+    public List<String> obtenerReseñas() {
+        return reseñas;
+    }
+
+    // Métodos para enlaces de libros digitales
+    public void establecerLink(String link) {
+        this.link = link;
+    }
+
+    public String obtenerLink() {
+        return link;
+    }
+
+    public static List<Libro> cargarLibrosDesdeCSV(String archivoCSV) {
+        return null;
+    }
+
+    public void agregarResena(String resena) {
     }
 }
