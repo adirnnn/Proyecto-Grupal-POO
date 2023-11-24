@@ -1,7 +1,10 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     private static final String NOMBRE_ARCHIVO_USUARIOS = "usuarios.txt";
@@ -12,7 +15,7 @@ public class Main {
         cargarUsuariosDesdeArchivo();
 
         Scanner scanner = new Scanner(System.in);
-        int opcion = 0;
+        int opcion;
 
         do {
             try {
@@ -51,21 +54,54 @@ public class Main {
     }
 
     private static void iniciarSesion() {
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("Ingrese su correo electrónico:");
-            String correo = scanner.nextLine().toLowerCase(); // Convertir a minúsculas
+        Scanner scanner = new Scanner(System.in);
 
-            System.out.println("Ingrese su contraseña:");
-            String contrasena = scanner.nextLine();
+        System.out.println("Ingrese su correo electrónico:");
+        String correo = scanner.nextLine().toLowerCase(); // Convertir a minúsculas
 
-            if (usuarios.containsKey(correo) && usuarios.get(correo).equals(contrasena)) {
-                System.out.println("Inicio de sesión exitoso. ¡Bienvenido!");
-                usuarioActual = correo;
-                menuPrincipal();
-            } else {
-                System.out.println("Correo electrónico o contraseña incorrectos. Inténtelo de nuevo.");
-            }
+        System.out.println("Ingrese su contraseña:");
+        String contrasena = scanner.nextLine();
+
+        if (usuarios.containsKey(correo) && usuarios.get(correo).equals(contrasena)) {
+            System.out.println("Inicio de sesión exitoso. ¡Bienvenido!");
+            usuarioActual = correo;
+            menuPrincipal();
+        } else {
+            System.out.println("Correo electrónico o contraseña incorrectos. Inténtelo de nuevo.");
         }
+    }
+
+    private static void menuPrincipal() {
+        Scanner scanner = new Scanner(System.in);
+        int opcion;
+
+        do {
+            System.out.println("\n\t\tMenú Principal:");
+            System.out.println("\t1. Mostrar Libros en catálogo");
+            System.out.println("\t2. Realizar reserva");
+            System.out.println("\t3. Cerrar sesión");
+            System.out.print("\tSeleccione una opción: ");
+
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // Limpiar el buffer de entrada
+
+            switch (opcion) {
+                case 1:
+                    LibrosCSVReader.leerYMostrarDatosLibros();
+                    System.out.println("Realizando tarea 1...");
+                    break;
+                case 2:
+                    realizarReserva();
+                    break;
+                case 3:
+                    usuarioActual = null;
+                    System.out.println("Cierre de sesión exitoso. Regresando al menú principal.");
+                    break;
+                default:
+                    System.out.println("Respuesta inválida. Inténtelo de nuevo.");
+                    break;
+            }
+        } while (opcion != 3);
     }
 
     private static void realizarReserva() {
@@ -74,112 +110,35 @@ public class Main {
             return;
         }
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("Ingrese el nombre del libro que desea reservar:");
-            String titulo = scanner.nextLine();
+        Scanner scanner = new Scanner(System.in);
 
-            // Aquí deberías implementar la lógica para reservar el libro con el título proporcionado
-            boolean reservaExitosa = CatalogoLibros.reservarLibro(titulo); // Asumiendo que tienes una instancia de CatalogoLibros llamada 'catalogo'
+        System.out.println("Ingrese el nombre del libro que desea reservar:");
+        String nombreLibro = scanner.nextLine();
 
-            if (reservaExitosa) {
-                System.out.println("Reserva exitosa. ¡Disfruta de tu lectura!");
-            } else {
-                System.out.println("El libro no está disponible o no existe.");
-            }
-        }
+        // Aquí puedes agregar la lógica para realizar la reserva, por ejemplo, actualizar un estado en el libro, etc.
+        // También puedes almacenar las reservas en una estructura de datos, por ejemplo, un mapa con el nombre del libro y el usuario que lo reservó.
+        // Por ahora, simplemente mostraremos un mensaje de reserva exitosa.
+
+        System.out.println("Reserva exitosa. ¡Disfruta de tu lectura!");
     }
-
-private static void menuPrincipal() {
-    try (Scanner scanner = new Scanner(System.in)) {
-        int opcion = 0;
-
-        do {
-            try {
-                System.out.println("Menú principal:");
-                System.out.println("1. Realizar una reserva");
-                System.out.println("2. Ver mis reservas");
-                System.out.println("3. Cerrar sesión");
-                System.out.print("Seleccione una opción: ");
-
-                opcion = scanner.nextInt();
-                scanner.nextLine(); // Limpiar el buffer de entrada
-
-                switch (opcion) {
-                    case 1:
-                        realizarReserva();
-                        LibrosCSVReader.leerYMostrarDatosLibros();
-                        System.out.println("Realizando tarea 1...");
-                        break;
-                    case 2:
-                        do {
-                            try {
-                                System.out.println("Opciones de ver mis reservas:");
-                                System.out.println("1. Opción 1");
-                                System.out.println("2. Opción 2");
-                                System.out.println("3. Volver al menú principal");
-                                System.out.print("Seleccione una opción: ");
-
-                                opcion = scanner.nextInt();
-                                scanner.nextLine(); // Limpiar el buffer de entrada
-
-                                switch (opcion) {
-                                    case 1:
-                                        // Lógica para la opción 1
-                                        break;
-                                    case 2:
-                                        // Lógica para la opción 2
-                                        break;
-                                    case 3:
-                                        System.out.println("Volviendo al menú principal...");
-                                        break;
-                                    default:
-                                        System.out.println("Respuesta inválida. Inténtelo de nuevo.");
-                                        break;
-                                }
-                            } catch (InputMismatchException e) {
-                                System.out.println("Entrada inválida. Por favor, ingrese un número.");
-                                scanner.nextLine(); // Limpiar el buffer de entrada para evitar bucle infinito
-                                opcion = 0; // Asignar un valor válido para que el bucle continúe
-                            }
-                        } while (opcion != 3);
-                        break;
-                    case 3:
-                        usuarioActual = null;
-                        System.out.println("Cierre de sesión exitoso. Regresando al menú principal.");
-                        break;
-                    default:
-                        System.out.println("Respuesta inválida. Inténtelo de nuevo.");
-                        break;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Entrada inválida. Por favor, ingrese un número.");
-                scanner.nextLine(); // Limpiar el buffer de entrada para evitar bucle infinito
-                opcion = 0; // Asignar un valor válido para que el bucle continúe
-            }
-        } while (opcion != 3);
-    }
-}
-    
 
     private static void registrarUsuario() {
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("Ingrese su correo electrónico:");
-            String correo = scanner.nextLine().toLowerCase(); // Convertir a minúsculas
-    
-            if (usuarios.containsKey(correo)) {
-                System.out.println("Este correo electrónico ya está en uso. Inténtelo con otro.");
-                return;
-            }
-    
-            System.out.println("Ingrese una contraseña:");
-            String contrasena = scanner.nextLine();
-    
-            usuarios.put(correo, contrasena);
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Ingrese su correo electrónico:");
+        String correo = scanner.nextLine().toLowerCase(); // Convertir a minúsculas
+
+        if (usuarios.containsKey(correo)) {
+            System.out.println("Este correo electrónico ya está en uso. Inténtelo con otro.");
+            return;
         }
-    
+
+        System.out.println("Ingrese una contraseña:");
+        String contrasena = scanner.nextLine();
+
+        usuarios.put(correo, contrasena);
         System.out.println("Usuario registrado con éxito.");
     }
-    
 
     private static void cargarUsuariosDesdeArchivo() {
         try {

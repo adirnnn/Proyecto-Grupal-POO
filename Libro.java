@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,8 +10,6 @@ public class Libro {
     private String formato;
     private String estado;
     private boolean reservado;
-    private List<String> reseñas;
-    private String link;
 
     public Libro(String titulo, String editorial, String formato, String estado) {
         this.titulo = titulo;
@@ -16,44 +17,25 @@ public class Libro {
         this.formato = formato;
         this.estado = estado;
         this.reservado = false;
-        this.reseñas = new ArrayList<>();
-        this.link = ""; // Establecer un enlace vacío por defecto
     }
 
-    // Getters y setters para los atributos
     public String getTitulo() {
         return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
     }
 
     public String getEditorial() {
         return editorial;
     }
 
-    public void setEditorial(String editorial) {
-        this.editorial = editorial;
-    }
-
     public String getFormato() {
         return formato;
-    }
-
-    public void setFormato(String formato) {
-        this.formato = formato;
     }
 
     public String getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public boolean estaReservado() {
+    public boolean isReservado() {
         return reservado;
     }
 
@@ -65,28 +47,27 @@ public class Libro {
         reservado = false;
     }
 
-    // Métodos para reseñas
-    public void agregarReseña(String resena) {
-        reseñas.add(resena);
-    }
-
-    public List<String> obtenerReseñas() {
-        return reseñas;
-    }
-
-    // Métodos para enlaces de libros digitales
-    public void establecerLink(String link) {
-        this.link = link;
-    }
-
-    public String obtenerLink() {
-        return link;
-    }
-
+    // Método estático para cargar libros desde un archivo CSV
     public static List<Libro> cargarLibrosDesdeCSV(String archivoCSV) {
-        return null;
-    }
+        List<Libro> libros = new ArrayList<>();
 
-    public void agregarResena(String resena) {
+        try (BufferedReader br = new BufferedReader(new FileReader(archivoCSV))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] partes = linea.split(",");
+                if (partes.length == 4) {
+                    String titulo = partes[0].trim();
+                    String editorial = partes[1].trim();
+                    String formato = partes[2].trim();
+                    String estado = partes[3].trim();
+
+                    libros.add(new Libro(titulo, editorial, formato, estado));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return libros;
     }
 }
